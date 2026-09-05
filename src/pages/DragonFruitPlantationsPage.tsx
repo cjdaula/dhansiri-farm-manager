@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { DragonFruitPlantation, Farm, Plot, PaddySeason, AreaUnit, Cultivation } from '@/lib/types';
 import { AREA_UNITS, AREA_UNIT_LABELS } from '@/lib/area';
-import { formatNumber, formatDate, todayISO, num } from '@/lib/format';
+import { formatNumber, formatDate, todayISO, num, formatFarmPlot } from '@/lib/format';
 import { calcActivePlants, calcPlantationAge, getDFPlantationStatusLabel } from '@/lib/dragonCalc';
 import { DF_PLANTATION_STATUSES, DF_SPACING_UNITS } from '@/lib/constants';
 import { Card, StatCard } from '@/components/ui/Card';
@@ -283,7 +283,7 @@ export function DragonFruitPlantationsPage({ onOpenPlantation }: Props) {
                       </span>
                     </div>
                     <div className="space-y-1.5 text-sm text-stone-500">
-                      <p className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> {farmName(p.farm_id)} / {plotName(p.plot_id)}</p>
+                      <p className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> {formatFarmPlot(farmName(p.farm_id), plotName(p.plot_id))}</p>
                       <p className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" /> {formatDate(p.plantation_start_date)} · {age?.label ?? '—'}</p>
                       <p>Area: {formatNumber(p.area)} {AREA_UNIT_LABELS[p.area_unit as AreaUnit] ?? p.area_unit}</p>
                       <p>Plants: {formatNumber(activePlants, 0)}{p.total_poles != null && ` · ${formatNumber(p.total_poles, 0)} poles`}</p>

@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 import type { Cultivation, CropType, CropVariety, Farm, Plot, PaddySeason, Settings, AreaUnit } from '@/lib/types';
 import { AREA_UNITS, DEFAULT_BIGHA_SQFT } from '@/lib/constants';
 import { AREA_UNIT_LABELS } from '@/lib/area';
-import { formatCurrency, formatDate, todayISO, num } from '@/lib/format';
+import { formatCurrency, formatDate, todayISO, num, formatFarmPlot } from '@/lib/format';
 import { calcPlannedProfitability } from '@/lib/cropCalc';
 import { PageHeader, LoadingState, ErrorState } from '@/components/ui/PageHeader';
 import { Card, StatCard } from '@/components/ui/Card';
@@ -159,7 +159,7 @@ export function CropPlanningPage() {
                         <div className="font-medium text-stone-800">{cropName(c.crop_type_id)}</div>
                         <div className="text-xs text-stone-500">{varietyName(c.variety_id)}</div>
                       </td>
-                      <td className="px-4 py-3 text-stone-500 whitespace-nowrap">{farmName(c.farm_id)} / {plotName(c.plot_id)}</td>
+                      <td className="px-4 py-3 text-stone-500 whitespace-nowrap">{formatFarmPlot(farmName(c.farm_id), plotName(c.plot_id))}</td>
                       <td className="px-4 py-3 text-stone-500 whitespace-nowrap">{seasonName(c.season_id)}</td>
                       <td className="px-4 py-3 text-stone-600 whitespace-nowrap">{c.area != null ? `${c.area} ${AREA_UNIT_LABELS[c.area_unit]}` : '—'}</td>
                       <td className="px-4 py-3 text-stone-500 whitespace-nowrap">{c.expected_yield != null ? `${c.expected_yield} ${c.expected_yield_unit ?? ''}` : '—'}</td>

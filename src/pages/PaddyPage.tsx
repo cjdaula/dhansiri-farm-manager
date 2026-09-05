@@ -3,7 +3,7 @@ import { Plus, Pencil, Trash2, Wheat, Search, Eye, Archive, ArchiveRestore } fro
 import { supabase } from '@/lib/supabase';
 import type { PaddyCrop, PaddyVariety, PaddySeason, Farm, Plot, AreaUnit, PaddyStatus } from '@/lib/types';
 import { AREA_UNITS, PADDY_STATUSES, PLANTING_METHODS, DEFAULT_BIGHA_SQFT } from '@/lib/constants';
-import { formatNumber, formatDate, formatCurrency } from '@/lib/format';
+import { formatNumber, formatDate, formatCurrency, formatFarmPlot } from '@/lib/format';
 import { calcYield, yieldLabel } from '@/lib/paddyCalc';
 import { PageHeader, LoadingState, ErrorState } from '@/components/ui/PageHeader';
 import { Card } from '@/components/ui/Card';
@@ -292,7 +292,7 @@ export function PaddyPage({ onOpenRecord }: PaddyPageProps) {
                             {varietyName(c.variety_id) ?? c.variety ?? '—'}
                           </td>
                           <td className="px-4 py-3 text-stone-500 whitespace-nowrap">
-                            {farmName(c.farm_id) ?? '—'} / {plotName(c.plot_id) ?? '—'}
+                            {formatFarmPlot(farmName(c.farm_id), plotName(c.plot_id))}
                           </td>
                           <td className="px-4 py-3 text-right text-stone-600 whitespace-nowrap">
                             {formatNumber(c.area)} {c.area_unit}

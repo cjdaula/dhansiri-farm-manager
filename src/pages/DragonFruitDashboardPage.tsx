@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { DragonFruitPlantation, DFProductionYear, DFHarvest, Expense, Income, Activity, Farm, Plot, Settings, AreaUnit } from '@/lib/types';
 import { AREA_UNIT_LABELS } from '@/lib/area';
-import { formatCurrency, formatNumber, formatDate } from '@/lib/format';
+import { formatCurrency, formatNumber, formatDate, formatFarmPlot } from '@/lib/format';
 import { calcActivePlants, calcPlantationAge, getDFPlantationStatusLabel } from '@/lib/dragonCalc';
 import { DF_PLANTATION_STATUSES, DEFAULT_BIGHA_SQFT } from '@/lib/constants';
 import { Card, StatCard } from '@/components/ui/Card';
@@ -239,7 +239,7 @@ export function DragonFruitDashboardPage({ onNavigate }: Props) {
                     return (
                       <tr key={p.id} className="border-b border-stone-50 last:border-0">
                         <td className="py-2.5 font-medium text-stone-700">{p.name}</td>
-                        <td className="py-2.5 text-stone-500">{farmName(p.farm_id)} / {plotName(p.plot_id)}</td>
+                        <td className="py-2.5 text-stone-500">{formatFarmPlot(farmName(p.farm_id), plotName(p.plot_id))}</td>
                         <td className="py-2.5">
                           <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${statusInfo?.color ?? 'bg-stone-100 text-stone-600'}`}>
                             {statusInfo?.label ?? getDFPlantationStatusLabel(p.status)}

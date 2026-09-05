@@ -6,7 +6,7 @@ import type {
   Farm, Plot, PaddySeason, Expense, Income, Activity, AreaUnit,
 } from '@/lib/types';
 import { AREA_UNIT_LABELS, AREA_UNITS } from '@/lib/area';
-import { formatCurrency, formatNumber, formatDate, todayISO, num } from '@/lib/format';
+import { formatCurrency, formatNumber, formatDate, todayISO, num, formatFarmPlot } from '@/lib/format';
 import { calcActivePlants, calcPlantationAge, summarizeDFHarvests, calcDFProfitability, getDFPlantationStatusLabel } from '@/lib/dragonCalc';
 import {
   DF_PLANTATION_STATUSES, DF_PRODUCTION_YEAR_STATUSES, DF_SPACING_UNITS,
@@ -168,7 +168,7 @@ export function DragonFruitPlantationDetail({ plantationId, onBack }: Props) {
         <div>
           <h1 className="text-2xl font-bold text-stone-800 tracking-tight">{plantation.name}</h1>
           <p className="mt-1 text-sm text-stone-500">
-            {farmName} / {plotName} · {formatDate(plantation.plantation_start_date)} · {age?.label ?? '—'}
+            {formatFarmPlot(farmName, plotName)} · {formatDate(plantation.plantation_start_date)} · {age?.label ?? '—'}
           </p>
         </div>
         <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium shrink-0 ${statusInfo?.color ?? 'bg-stone-100 text-stone-600'}`}>

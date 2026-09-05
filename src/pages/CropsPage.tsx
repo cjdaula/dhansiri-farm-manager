@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 import type { Cultivation, CultivationStatus, CropType, CropVariety, Farm, Plot, PaddySeason, AreaUnit } from '@/lib/types';
 import { CULTIVATION_STATUSES, AREA_UNITS } from '@/lib/constants';
 import { AREA_UNIT_LABELS } from '@/lib/area';
-import { formatCurrency, formatDate, todayISO, num } from '@/lib/format';
+import { formatCurrency, formatDate, todayISO, num, formatFarmPlot } from '@/lib/format';
 import { PageHeader, LoadingState, ErrorState } from '@/components/ui/PageHeader';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -266,7 +266,7 @@ export function CropsPage({ onOpenRecord }: CropsPageProps) {
                           {c.is_perennial && <span className="inline-flex items-center mt-0.5 px-1.5 py-0.5 rounded bg-amber-50 text-amber-600 text-[10px] font-medium">Perennial</span>}
                           {c.intercrop_role && c.intercrop_role !== 'primary' && <span className="ml-1 inline-flex items-center px-1.5 py-0.5 rounded bg-sky-50 text-sky-600 text-[10px] font-medium">Intercrop</span>}
                         </td>
-                        <td className="px-4 py-3 text-stone-500 whitespace-nowrap">{farmName(c.farm_id)} / {plotName(c.plot_id)}</td>
+                        <td className="px-4 py-3 text-stone-500 whitespace-nowrap">{formatFarmPlot(farmName(c.farm_id), plotName(c.plot_id))}</td>
                         <td className="px-4 py-3 text-stone-500 whitespace-nowrap">{seasonName(c.season_id)}</td>
                         <td className="px-4 py-3 text-stone-600 whitespace-nowrap">{c.area != null ? `${c.area} ${AREA_UNIT_LABELS[c.area_unit]}` : '—'}</td>
                         <td className="px-4 py-3 text-stone-500 whitespace-nowrap">{formatDate(c.start_date)}</td>

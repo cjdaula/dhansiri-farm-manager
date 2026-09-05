@@ -3,7 +3,7 @@ import { Plus, Pencil, Trash2, TrendingDown, Calculator, SplitSquareHorizontal }
 import { supabase } from '@/lib/supabase';
 import type { Expense, Farm, Plot, PaddyCrop, CropType, ExpenseCategory, ExpenseAllocation, ExpenseType, RecurrenceType, ExpensePaymentStatus } from '@/lib/types';
 import { DEFAULT_EXPENSE_CATEGORIES, EXPENSE_TYPES, RECURRENCE_TYPES, EXPENSE_PAYMENT_STATUSES, PAYMENT_METHODS } from '@/lib/constants';
-import { formatCurrency, formatDate, todayISO, num } from '@/lib/format';
+import { formatCurrency, formatDate, todayISO, num, formatFarmPlot } from '@/lib/format';
 import { PageHeader, LoadingState, ErrorState } from '@/components/ui/PageHeader';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -272,6 +272,7 @@ export function ExpensesPage() {
                   <tr>
                     <th className="text-left px-4 py-3 font-medium">Date</th>
                     <th className="text-left px-4 py-3 font-medium">Category</th>
+                    <th className="text-left px-4 py-3 font-medium">Subcategory</th>
                     <th className="text-left px-4 py-3 font-medium">Description</th>
                     <th className="text-left px-4 py-3 font-medium">Farm / Plot</th>
                     <th className="text-left px-4 py-3 font-medium">Type</th>
@@ -288,7 +289,7 @@ export function ExpensesPage() {
                         <td className="px-4 py-3 text-stone-600 whitespace-nowrap">{formatDate(e.date)}</td>
                         <td className="px-4 py-3">
                           <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-stone-100 text-stone-700 text-xs font-medium">
-                            {e.category}{e.subcategory ? ` · ${e.subcategory}` : ''}
+                            {e.category || '—'}
                           </span>
                           {allocs.length > 0 && (
                             <span className="ml-1 inline-flex items-center px-1.5 py-0.5 rounded bg-violet-50 text-violet-600 text-[10px] font-medium" title={`${allocs.length} allocations`}>
@@ -296,8 +297,9 @@ export function ExpensesPage() {
                             </span>
                           )}
                         </td>
+                        <td className="px-4 py-3 text-stone-500 text-xs">{e.subcategory || '—'}</td>
                         <td className="px-4 py-3 text-stone-700 max-w-xs truncate">{e.description || '—'}</td>
-                        <td className="px-4 py-3 text-stone-500 whitespace-nowrap">{farmName(e.farm_id)} / {plotName(e.plot_id)}</td>
+                        <td className="px-4 py-3 text-stone-500 whitespace-nowrap">{formatFarmPlot(farmName(e.farm_id), plotName(e.plot_id))}</td>
                         <td className="px-4 py-3 text-stone-500 text-xs">{e.expense_type === 'capital' ? 'Capital' : 'Operating'}</td>
                         <td className="px-4 py-3">
                           <PaymentBadge status={e.payment_status} />

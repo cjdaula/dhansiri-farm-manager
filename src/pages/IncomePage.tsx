@@ -3,7 +3,7 @@ import { Plus, Pencil, Trash2, TrendingUp, Calculator, Banknote } from 'lucide-r
 import { supabase } from '@/lib/supabase';
 import type { Income, Farm, Plot, PaddyCrop, CropType, IncomeType, IncomePaymentStatus } from '@/lib/types';
 import { INCOME_TYPES, INCOME_PAYMENT_STATUSES, PAYMENT_METHODS, type DateRangePreset } from '@/lib/constants';
-import { formatCurrency, formatDate, todayISO, num } from '@/lib/format';
+import { formatCurrency, formatDate, todayISO, num, formatFarmPlot } from '@/lib/format';
 import { PageHeader, LoadingState, ErrorState } from '@/components/ui/PageHeader';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -218,7 +218,7 @@ export function IncomePage() {
                       <td className="px-4 py-3 text-stone-600 whitespace-nowrap">{formatDate(e.date)}</td>
                       <td className="px-4 py-3 text-stone-700 font-medium">{e.product}</td>
                       <td className="px-4 py-3 text-stone-500">{e.buyer || '—'}</td>
-                      <td className="px-4 py-3 text-stone-500 whitespace-nowrap">{farmName(e.farm_id)} / {plotName(e.plot_id)}</td>
+                      <td className="px-4 py-3 text-stone-500 whitespace-nowrap">{formatFarmPlot(farmName(e.farm_id), plotName(e.plot_id))}</td>
                       <td className="px-4 py-3 text-stone-500 text-xs">{e.income_type === 'other' ? 'Other' : 'Sale'}</td>
                       <td className="px-4 py-3"><IncomeBadge status={e.payment_status} /></td>
                       <td className="px-4 py-3 text-right font-semibold text-emerald-700 whitespace-nowrap">{formatCurrency(e.total_income)}</td>

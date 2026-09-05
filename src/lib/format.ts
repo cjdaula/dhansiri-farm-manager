@@ -25,3 +25,15 @@ export function num(value: string | number | null | undefined): number | null {
   const n = Number(value);
   return Number.isNaN(n) ? null : n;
 }
+
+export function formatFarmPlot(
+  farmName: string | null | undefined,
+  plotName: string | null | undefined,
+): string {
+  const farm = farmName?.trim() || '';
+  const plot = plotName?.trim() || '';
+  if (!farm && !plot) return '—';
+  if (!plot) return farm;
+  if (!farm) return plot;
+  return `${farm} / ${plot}`;
+}

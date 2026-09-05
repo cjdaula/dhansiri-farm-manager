@@ -3,7 +3,7 @@ import { Plus, Pencil, Trash2, CalendarClock } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import type { Activity, Farm, Plot, PaddyCrop } from '@/lib/types';
 import { ACTIVITY_TYPES, ACTIVITY_STATUSES } from '@/lib/constants';
-import { formatDate, todayISO } from '@/lib/format';
+import { formatDate, todayISO, formatFarmPlot } from '@/lib/format';
 import { PageHeader, LoadingState, ErrorState } from '@/components/ui/PageHeader';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -124,7 +124,7 @@ export function ActivitiesPage() {
                       <td className="px-4 py-3 text-stone-600 whitespace-nowrap">{formatDate(a.date)}</td>
                       <td className="px-4 py-3 text-stone-700 font-medium">{a.name}</td>
                       <td className="px-4 py-3 text-stone-500">{a.activity_type ?? '—'}</td>
-                      <td className="px-4 py-3 text-stone-500 whitespace-nowrap">{farmName(a.farm_id)} / {plotName(a.plot_id)}</td>
+                      <td className="px-4 py-3 text-stone-500 whitespace-nowrap">{formatFarmPlot(farmName(a.farm_id), plotName(a.plot_id))}</td>
                       <td className="px-4 py-3">
                         <span className={`inline-flex px-2 py-0.5 rounded-md text-xs font-medium ${sm.color}`}>{sm.label}</span>
                       </td>

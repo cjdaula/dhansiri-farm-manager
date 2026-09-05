@@ -1,14 +1,14 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import {
-  TrendingUp, TrendingDown, Wallet, Banknote, PieChart, BarChart3,
-  ArrowUpRight, ArrowDownRight, Layers, Calendar, Sprout, MapPin,
+  TrendingUp, TrendingDown, Wallet, Banknote, BarChart3,
+  ArrowUpRight, ArrowDownRight, Layers,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import type {
   Expense, Income, Farm, Plot, PaddyCrop, Cultivation, CropType,
-  ExpenseCategory, DragonFruitPlantation, AreaUnit,
+  ExpenseCategory, DragonFruitPlantation,
 } from '@/lib/types';
-import { formatCurrency, formatNumber, formatDate } from '@/lib/format';
+import { formatCurrency, formatDate } from '@/lib/format';
 import { PageHeader, LoadingState, ErrorState } from '@/components/ui/PageHeader';
 import { Card, StatCard } from '@/components/ui/Card';
 import { Select } from '@/components/ui/Field';
@@ -28,6 +28,7 @@ export function FinancialsPage() {
   const [cropTypes, setCropTypes] = useState<CropType[]>([]);
   const [categories, setCategories] = useState<ExpenseCategory[]>([]);
   const [dfPlantations, setDfPlantations] = useState<DragonFruitPlantation[]>([]);
+  const [dfPlantationCultivationIds, setDfPlantationCultivationIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -55,7 +56,7 @@ export function FinancialsPage() {
       supabase.from('cultivations').select('id, crop_type_id, variety_id, status, notes').order('created_at', { ascending: false }),
       supabase.from('crop_types').select('id, name').order('name'),
       supabase.from('expense_categories').select('*').order('name'),
-      supabase.from('dragon_fruit_plantations').select('id, name').order('name'),
+      supabase.from('dragon_fruit_plantations').select('id, name, cultivation_id').order('name'),
     ]);
     if (eRes.error) setError(eRes.error.message);
     else setExpenses(eRes.data ?? []);
@@ -67,7 +68,11 @@ export function FinancialsPage() {
     if (cultRes.data) setCultivations(cultRes.data as Cultivation[]);
     if (ctRes.data) setCropTypes(ctRes.data as CropType[]);
     if (catRes.data) setCategories(catRes.data as ExpenseCategory[]);
-    if (dfRes.data) setDfPlantations(dfRes.data as DragonFruitPlantation[]);
+    if (dfRes.data) {
+      const plantations = dfRes.data as DragonFruitPlantation[];
+      setDfPlantations(plantations);
+      setDfPlantationCultivationIds(plantations.map((p) => p.cultivation_id).filter((id): id is string => id != null));
+    }
     setLoading(false);
   }, []);
 
@@ -92,11 +97,12 @@ export function FinancialsPage() {
       if (cropTypeId && e.crop_type_id !== cropTypeId) return false;
       if (cropId && e.paddy_crop_id !== cropId) return false;
       if (cultivationId && e.cultivation_id !== cultivationId) return false;
+      if (dfPlantationId && dfPlantationCultivationIds.length > 0 && !dfPlantationCultivationIds.includes(e.cultivation_id ?? '')) return false;
       if (categoryFilter && e.category !== categoryFilter) return false;
       if (paymentStatusFilter && e.payment_status !== paymentStatusFilter) return false;
       return true;
     });
-  }, [expenses, from, to, farmId, plotId, cropTypeId, cropId, cultivationId, categoryFilter, paymentStatusFilter]);
+  }, [expenses, from, to, farmId, plotId, cropTypeId, cropId, cultivationId, dfPlantationId, dfPlantationCultivationIds, categoryFilter, paymentStatusFilter]);
 
   const filteredIncome = useMemo(() => {
     return income.filter((e) => {
@@ -107,10 +113,11 @@ export function FinancialsPage() {
       if (cropTypeId && e.crop_type_id !== cropTypeId) return false;
       if (cropId && e.paddy_crop_id !== cropId) return false;
       if (cultivationId && e.cultivation_id !== cultivationId) return false;
+      if (dfPlantationId && dfPlantationCultivationIds.length > 0 && !dfPlantationCultivationIds.includes(e.cultivation_id ?? '')) return false;
       if (paymentStatusFilter && e.payment_status !== paymentStatusFilter) return false;
       return true;
     });
-  }, [income, from, to, farmId, plotId, cropTypeId, cropId, cultivationId, paymentStatusFilter]);
+  }, [income, from, to, farmId, plotId, cropTypeId, cropId, cultivationId, dfPlantationId, dfPlantationCultivationIds, paymentStatusFilter]);
 
   const pnl = useMemo(() => calcPnL(
     includeCapital ? filteredExpenses : filteredExpenses.filter((e) => e.expense_type !== 'capital'),
